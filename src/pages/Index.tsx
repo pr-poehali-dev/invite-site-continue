@@ -95,13 +95,18 @@ const AUGUST_2026 = [
 ];
 
 export default function Index() {
-  const [intro, setIntro] = useState<"phrase" | "open">("phrase");
+  const [gone, setGone] = useState(false);
   const [formData, setFormData] = useState({ name: "", attending: "", wish: "" });
   const [submitted, setSubmitted] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
   const { d, h, m, s } = useCountdown(WEDDING_DATE);
 
   const handleTouch = () => {
-    if (intro === "phrase") setIntro("open");
+    if (gone) return;
+    setGone(true);
+    setTimeout(() => {
+      contentRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 900);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -114,142 +119,157 @@ export default function Index() {
   return (
     <div style={{ background: C.bg, minHeight: "100vh", fontFamily: "'Montserrat', sans-serif", color: C.text, overflowX: "hidden" }}>
 
-      {/* СЕКЦИЯ 1: ИНТРО */}
-      <section
+      {/* СЕКЦИЯ 1: ИНТРО — полноэкранный оверлей */}
+      <div
         onClick={handleTouch}
         style={{
-          minHeight: "100vh",
+          position: "fixed",
+          inset: 0,
+          zIndex: 100,
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          position: "relative",
-          overflow: "hidden",
-          cursor: "default",
           background: C.bg,
+          cursor: "default",
+          opacity: gone ? 0 : 1,
+          pointerEvents: gone ? "none" : "auto",
+          transition: "opacity 1.1s cubic-bezier(0.4, 0, 0.2, 1)",
         }}
       >
-        {/* Мягкое утреннее свечение сверху-справа */}
+        {/* Утреннее свечение сверху-справа */}
         <div style={{
           position: "absolute",
-          top: "-20%",
-          right: "-10%",
-          width: "70vw",
-          height: "70vw",
-          maxWidth: 600,
-          maxHeight: 600,
+          top: "-15%", right: "-5%",
+          width: "65vw", height: "65vw",
+          maxWidth: 560, maxHeight: 560,
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(220,215,195,0.55) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(224,218,200,0.5) 0%, transparent 68%)",
           pointerEvents: "none",
         }} />
+        {/* Мягкое оливковое свечение снизу-слева */}
         <div style={{
           position: "absolute",
-          bottom: "-15%",
-          left: "-10%",
-          width: "50vw",
-          height: "50vw",
-          maxWidth: 400,
-          maxHeight: 400,
+          bottom: "-10%", left: "-5%",
+          width: "45vw", height: "45vw",
+          maxWidth: 380, maxHeight: 380,
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(168,184,154,0.2) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(168,184,154,0.22) 0%, transparent 70%)",
           pointerEvents: "none",
         }} />
 
-        {/* Фаза 1: фраза */}
-        <div style={{
-          position: "absolute",
-          inset: 0,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "40px 32px",
-          opacity: intro === "phrase" ? 1 : 0,
-          transition: "opacity 1.2s ease",
-          pointerEvents: intro === "phrase" ? "auto" : "none",
-          textAlign: "center",
-        }}>
+        <div style={{ textAlign: "center", padding: "40px 32px", position: "relative", zIndex: 1 }}>
           <p style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: "clamp(22px, 6vw, 38px)",
+            fontSize: "clamp(24px, 6.5vw, 42px)",
             fontWeight: 300,
             color: C.text,
-            lineHeight: 1.6,
+            lineHeight: 1.65,
             letterSpacing: "0.01em",
-            maxWidth: 520,
+            maxWidth: 500,
+            margin: "0 auto",
             opacity: 0,
-            animation: "softAppear 2s ease 0.4s forwards",
+            animation: "softAppear 2.2s cubic-bezier(0.4,0,0.2,1) 0.3s forwards",
           }}>
             У каждой любви<br />есть своя история…
           </p>
         </div>
+      </div>
 
-        {/* Фаза 2: основное приглашение */}
+      {/* ОСНОВНОЙ КОНТЕНТ */}
+      <div ref={contentRef}>
+
+      {/* СЕКЦИЯ 1: ГЕРОЙ */}
+      <section style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+        overflow: "hidden",
+        padding: "40px 32px",
+        textAlign: "center",
+        background: C.bg,
+      }}>
         <div style={{
           position: "absolute",
-          inset: 0,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "40px 32px",
-          opacity: intro === "open" ? 1 : 0,
-          transition: "opacity 1.4s ease",
-          pointerEvents: intro === "open" ? "auto" : "none",
-          textAlign: "center",
+          top: "-15%", right: "-5%",
+          width: "65vw", height: "65vw",
+          maxWidth: 560, maxHeight: 560,
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(224,218,200,0.4) 0%, transparent 68%)",
+          pointerEvents: "none",
+        }} />
+        <p style={{
+          fontSize: 11,
+          letterSpacing: "0.3em",
+          textTransform: "uppercase",
+          color: C.accent,
+          marginBottom: 32,
+          opacity: gone ? 1 : 0,
+          transform: gone ? "translateY(0)" : "translateY(16px)",
+          transition: "opacity 1s ease 0.5s, transform 1s ease 0.5s",
         }}>
-          <p style={{
-            fontSize: 11,
-            letterSpacing: "0.3em",
-            textTransform: "uppercase",
-            color: C.accent,
-            marginBottom: 32,
-          }}>
-            Свадебное приглашение
-          </p>
-          <h1 style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontSize: "clamp(52px, 14vw, 96px)",
-            fontWeight: 300,
-            lineHeight: 1,
-            color: C.text,
-            letterSpacing: "-0.01em",
-            marginBottom: 8,
-          }}>
-            Аэлита
-          </h1>
-          <p style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontSize: "clamp(18px, 4vw, 28px)",
-            fontWeight: 300,
-            color: C.accentLight,
-            letterSpacing: "0.25em",
-            marginBottom: 8,
-          }}>
-            &amp;
-          </p>
-          <h1 style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontSize: "clamp(52px, 14vw, 96px)",
-            fontWeight: 300,
-            lineHeight: 1,
-            color: C.text,
-            letterSpacing: "-0.01em",
-            marginBottom: 40,
-          }}>
-            Тузагаш
-          </h1>
-          <div style={{ width: 32, height: 1, background: C.borderAccent, margin: "0 auto 32px" }} />
-          <p style={{
-            fontSize: "clamp(13px, 3vw, 15px)",
-            letterSpacing: "0.15em",
-            color: C.textMuted,
-            lineHeight: 2,
-          }}>
-            Приглашаем вас разделить<br />
-            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(20px, 5vw, 26px)", color: C.text, letterSpacing: "0.05em" }}>18 августа 2026</span>
-          </p>
-        </div>
+          Свадебное приглашение
+        </p>
+        <h1 style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: "clamp(52px, 14vw, 96px)",
+          fontWeight: 300,
+          lineHeight: 1,
+          color: C.text,
+          letterSpacing: "-0.01em",
+          marginBottom: 8,
+          opacity: gone ? 1 : 0,
+          transform: gone ? "translateY(0)" : "translateY(20px)",
+          transition: "opacity 1s ease 0.7s, transform 1s ease 0.7s",
+        }}>
+          Аэлита
+        </h1>
+        <p style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: "clamp(18px, 4vw, 28px)",
+          fontWeight: 300,
+          color: C.accentLight,
+          letterSpacing: "0.25em",
+          marginBottom: 8,
+          opacity: gone ? 1 : 0,
+          transition: "opacity 1s ease 0.9s",
+        }}>
+          &amp;
+        </p>
+        <h1 style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: "clamp(52px, 14vw, 96px)",
+          fontWeight: 300,
+          lineHeight: 1,
+          color: C.text,
+          letterSpacing: "-0.01em",
+          marginBottom: 40,
+          opacity: gone ? 1 : 0,
+          transform: gone ? "translateY(0)" : "translateY(20px)",
+          transition: "opacity 1s ease 1s, transform 1s ease 1s",
+        }}>
+          Тузагаш
+        </h1>
+        <div style={{
+          width: 32, height: 1,
+          background: C.borderAccent,
+          margin: "0 auto 32px",
+          opacity: gone ? 1 : 0,
+          transition: "opacity 1s ease 1.2s",
+        }} />
+        <p style={{
+          fontSize: "clamp(13px, 3vw, 15px)",
+          letterSpacing: "0.15em",
+          color: C.textMuted,
+          lineHeight: 2,
+          opacity: gone ? 1 : 0,
+          transition: "opacity 1s ease 1.3s",
+        }}>
+          Приглашаем вас разделить<br />
+          <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(20px, 5vw, 26px)", color: C.text, letterSpacing: "0.05em" }}>18 августа 2026</span>
+        </p>
       </section>
 
       {/* СЕКЦИЯ 2: ТАЙМЕР */}
@@ -610,11 +630,7 @@ export default function Index() {
 
       <style>{`
         @keyframes softAppear {
-          from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(16px); }
+          from { opacity: 0; transform: translateY(14px); }
           to { opacity: 1; transform: translateY(0); }
         }
         input::placeholder, textarea::placeholder { color: rgba(140,130,120,0.6); }
@@ -623,6 +639,8 @@ export default function Index() {
         ::-webkit-scrollbar-track { background: #F8F5F0; }
         ::-webkit-scrollbar-thumb { background: rgba(122,140,110,0.3); border-radius: 2px; }
       `}</style>
+
+      </div>{/* /contentRef */}
     </div>
   );
 }
