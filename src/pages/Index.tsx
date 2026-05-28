@@ -36,16 +36,16 @@ export default function Index() {
         <source src="" type="audio/mpeg" />
       </audio>
 
-      {/* ПЛАВАЮЩАЯ КНОПКА МУЗЫКИ */}
+      {/* КНОПКА МУЗЫКИ — правый верхний угол */}
       <button
         onClick={toggleMusic}
         style={{
           position: "fixed",
-          bottom: 24,
-          right: 24,
+          top: 20,
+          right: 20,
           zIndex: 200,
-          width: 48,
-          height: 48,
+          width: 44,
+          height: 44,
           borderRadius: "50%",
           background: playing ? C.sage : "rgba(250,246,239,0.92)",
           border: `1px solid ${playing ? C.sage : "rgba(107,125,94,0.3)"}`,
@@ -65,12 +65,13 @@ export default function Index() {
       </button>
 
       {/* ВЕРХНЯЯ ПОЛОВИНА: интро, герой, таймер, история, календарь */}
-      <WeddingTop gone={gone} onTouch={handleTouch} />
+      {/* ref на герой — чтобы после интро скроллило на начало, а не на программу */}
+      <div ref={contentRef}>
+        <WeddingTop gone={gone} onTouch={handleTouch} />
+      </div>
 
       {/* НИЖНЯЯ ПОЛОВИНА: программа, место, дресс-код, RSVP, финал */}
-      <div ref={contentRef}>
-        <WeddingBottom />
-      </div>
+      <WeddingBottom />
 
       <style>{`
         @keyframes softAppear {

@@ -215,8 +215,10 @@ export default function WeddingBottom() {
             alt="Аэлита и Тузагаш"
             style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }}
           />
-          {/* Тёмный градиент снизу фото */}
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "50%", background: "linear-gradient(180deg, transparent 0%, rgba(20,18,16,0.95) 100%)", pointerEvents: "none" }} />
+          {/* Лёгкое затемнение сверху */}
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "25%", background: "linear-gradient(180deg, rgba(20,18,16,0.55) 0%, transparent 100%)", pointerEvents: "none" }} />
+          {/* Плавный тёмный переход снизу — на всю высоту нижней трети */}
+          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "60%", background: "linear-gradient(180deg, transparent 0%, rgba(20,18,16,0.7) 50%, #141210 100%)", pointerEvents: "none" }} />
           {/* Снегопад поверх фото */}
           <Snowfall />
         </div>
