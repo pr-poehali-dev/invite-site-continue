@@ -1,6 +1,55 @@
-import { useState } from "react";
-import { C, SCHEDULE, DRESS_COLORS, IMG_PEONY1, IMG_PEONY2, IMG_WINTER } from "./wedding-config";
+import { useState, useEffect, useRef } from "react";
+import { C, SCHEDULE, DRESS_COLORS, IMG_WINTER } from "./wedding-config";
 import { FadeIn } from "./wedding-shared";
+
+const IMG_BOTANICAL = "https://cdn.poehali.dev/projects/c533460a-ce3f-405a-b498-c59832d6dc6c/files/87a92a96-7ed9-41bb-9af5-91138d62885a.jpg";
+
+// Анимированный снегопад на Canvas
+function Snowfall() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const flakes = Array.from({ length: 120 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: 0.8 + Math.random() * 2.2,
+      speed: 0.4 + Math.random() * 1.2,
+      drift: (Math.random() - 0.5) * 0.4,
+      opacity: 0.3 + Math.random() * 0.6,
+    }));
+
+    let raf: number;
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      flakes.forEach(f => {
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${f.opacity})`;
+        ctx.fill();
+        f.y += f.speed;
+        f.x += f.drift;
+        if (f.y > canvas.height) { f.y = -4; f.x = Math.random() * canvas.width; }
+        if (f.x > canvas.width)  f.x = 0;
+        if (f.x < 0) f.x = canvas.width;
+      });
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
+  }, []);
+  return <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 2 }} />;
+}
 
 export default function WeddingBottom() {
   const [formData, setFormData] = useState({ name: "", attending: "", wish: "" });
@@ -14,7 +63,8 @@ export default function WeddingBottom() {
   return (
     <>
       {/* ПРОГРАММА */}
-      <section style={{ padding: "100px 20px", maxWidth: 700, margin: "0 auto" }}>
+      <section style={{ padding: "100px 20px", maxWidth: 700, margin: "0 auto", position: "relative" }}>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${IMG_BOTANICAL})`, backgroundSize: "cover", backgroundPosition: "center", opacity: 0.05, pointerEvents: "none" }} />
         <FadeIn>
           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(13px, 3vw, 15px)", letterSpacing: "0.3em", color: C.sage, textTransform: "uppercase", textAlign: "center", marginBottom: 64 }}>
             Программа дня
@@ -153,31 +203,40 @@ export default function WeddingBottom() {
       </section>
 
       {/* ПЛАВНЫЙ ПЕРЕХОД К ТЁМНОМУ */}
-      <div style={{ height: 200, background: `linear-gradient(180deg, ${C.creamAlt} 0%, #2A2520 100%)` }} />
+      <div style={{ height: 200, background: `linear-gradient(180deg, ${C.creamAlt} 0%, #141210 100%)` }} />
 
-      {/* ФИНАЛ — тёмный */}
-      <section style={{ padding: "80px 20px 120px", textAlign: "center", position: "relative", overflow: "hidden", background: C.dark1 }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${IMG_PEONY1})`, backgroundSize: "cover", backgroundPosition: "center", opacity: 0.06 }} />
-        <div style={{ position: "relative", zIndex: 1 }}>
+      {/* ФИНАЛ — тёмный фон + снегопад */}
+      <section style={{ position: "relative", overflow: "hidden", background: C.dark2 }}>
+
+        {/* Фото на весь экран, без обрезки, без поворота */}
+        <div style={{ position: "relative", width: "100%", lineHeight: 0 }}>
+          <img
+            src={IMG_WINTER}
+            alt="Аэлита и Тузагаш"
+            style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }}
+          />
+          {/* Тёмный градиент снизу фото */}
+          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "50%", background: "linear-gradient(180deg, transparent 0%, rgba(20,18,16,0.95) 100%)", pointerEvents: "none" }} />
+          {/* Снегопад поверх фото */}
+          <Snowfall />
+        </div>
+
+        {/* Текстовый блок на тёмном фоне */}
+        <div style={{ padding: "60px 20px 100px", textAlign: "center", position: "relative", zIndex: 3 }}>
           <FadeIn>
-            <div style={{ width: "min(260px, 70vw)", aspectRatio: "1", margin: "0 auto 44px", overflow: "hidden", borderRadius: "50%", border: "1px solid rgba(255,255,255,0.12)", position: "relative" }}>
-              <img src={IMG_WINTER} alt="Аэлита и Тузагаш" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", transform: "rotate(90deg) scale(1.3)" }} />
-            </div>
-          </FadeIn>
-          <FadeIn delay={0.15}>
             <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(22px,6vw,36px)", fontWeight: 300, color: "#F5F0E8", lineHeight: 1.75, marginBottom: 20 }}>
               Мы вас ждём<br />
               <span style={{ fontSize: "0.7em", color: "rgba(245,240,232,0.6)" }}>и будем счастливы разделить этот важный день вместе с вами</span>
             </p>
           </FadeIn>
-          <FadeIn delay={0.25}>
+          <FadeIn delay={0.15}>
             <div style={{ width: 36, height: 1, background: "rgba(201,132,122,0.5)", margin: "28px auto" }} />
             <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(16px,4vw,20px)", color: "rgba(245,240,232,0.55)", fontStyle: "italic", marginBottom: 36 }}>
               С любовью,<br />
               <span style={{ fontSize: "1.25em", color: "#F5F0E8" }}>Аэлита &amp; Тузагаш</span>
             </p>
           </FadeIn>
-          <FadeIn delay={0.35}>
+          <FadeIn delay={0.25}>
             <div style={{ display: "flex", gap: 32, justifyContent: "center", flexWrap: "wrap" }}>
               {[
                 { role: "Невеста — Аэлита", phone: "+7 (983) 581-61-97", tel: "+79835816197" },
@@ -190,11 +249,16 @@ export default function WeddingBottom() {
               ))}
             </div>
           </FadeIn>
-          <FadeIn delay={0.45}>
+          <FadeIn delay={0.35}>
             <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(38px,11vw,68px)", color: "rgba(245,240,232,0.05)", fontWeight: 300, letterSpacing: "0.08em", userSelect: "none", marginTop: 60 }}>
               18.08.2026
             </p>
           </FadeIn>
+        </div>
+
+        {/* Снегопад поверх всего финала */}
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}>
+          <Snowfall />
         </div>
       </section>
     </>
