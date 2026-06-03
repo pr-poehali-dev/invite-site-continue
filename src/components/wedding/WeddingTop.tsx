@@ -126,12 +126,7 @@ export default function WeddingTop({ gone, onTouch }: WeddingTopProps) {
             fontSize: "clamp(13px, 3vw, 15px)", letterSpacing: "0.12em",
             color: C.textMuted, lineHeight: 2.2,
             opacity: gone ? 1 : 0, transition: "opacity 1s ease 1.3s",
-          }}>
-            Приглашаем вас разделить<br />
-            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(22px, 5.5vw, 30px)", color: C.text, letterSpacing: "0.05em" }}>
-              18 августа 2026
-            </span>
-          </p>
+          }}>𝟏𝟖.𝟎𝟖.𝟐𝟎𝟐𝟔</p>
         </div>
       </section>
 
