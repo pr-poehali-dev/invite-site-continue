@@ -232,9 +232,7 @@ export default function WeddingTop({ gone, onTouch }: WeddingTopProps) {
                   </div>
                 </div>
               </div>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(15px, 3.5vw, 18px)", fontStyle: "italic", color: C.textMuted, marginTop: 20, lineHeight: 1.7, padding: "0 10px" }}>
-                «Интересно, какой будет моя будущая жена?..»
-              </p>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(15px, 3.5vw, 18px)", fontStyle: "italic", color: C.textMuted, marginTop: 20, lineHeight: 1.7, padding: "0 10px" }}>«Интересно, кто будет моей женой, когда я вырасту?..»</p>
             </div>
           </FadeIn>
         </div>
