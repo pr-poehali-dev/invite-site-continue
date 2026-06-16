@@ -106,7 +106,7 @@ export default function WeddingBottom() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px,1fr))", gap: 20, maxWidth: 700, margin: "0 auto 48px" }}>
           {[
             { title: "Алтай той",       addr: "с. Новый Бельтир", street: "ул. Кара-Кем, дом 5",  time: "10:00", maps: "https://maps.google.com/?q=Новый+Бельтир" },
-            { title: "Банкет · «Таштажу»", addr: "с. Кош-Агач",   street: "ул. Каменистая, 27",    time: "16:00", maps: "https://maps.google.com/?q=Кош-Агач+Каменистая+27" },
+            { title: "Банкет · «Туштажу»", addr: "с. Кош-Агач",   street: "ул. Каменистая, 27",    time: "16:00", maps: "https://maps.google.com/?q=Кош-Агач+Каменистая+27" },
           ].map((loc, i) => (
             <FadeIn key={i} delay={i * 0.15}>
               <div style={{ border: `1px solid ${C.border}`, borderRadius: 2, padding: "28px 22px", background: C.cream, position: "relative" }}>
