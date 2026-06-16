@@ -8,14 +8,14 @@ const MUSIC_URL = "https://cdn.poehali.dev/projects/c533460a-ce3f-405a-b498-c598
 export default function Index() {
   const [gone, setGone] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [showMusicPrompt, setShowMusicPrompt] = useState(false);
+  const [showBanner, setShowBanner] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const handleTouch = () => {
     if (gone) return;
     setGone(true);
-    setShowMusicPrompt(true);
+    setShowBanner(true);
     setTimeout(() => {
       contentRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 900);
@@ -38,7 +38,7 @@ export default function Index() {
   };
 
   const acceptMusic = async () => {
-    setShowMusicPrompt(false);
+    setShowBanner(false);
     const audio = audioRef.current;
     if (!audio) return;
     try {
@@ -49,10 +49,6 @@ export default function Index() {
     }
   };
 
-  const declineMusic = () => {
-    setShowMusicPrompt(false);
-  };
-
   return (
     <div style={{ background: C.cream, minHeight: "100vh", fontFamily: "'Montserrat', sans-serif", color: C.text, overflowX: "hidden" }}>
 
@@ -60,70 +56,40 @@ export default function Index() {
         <source src={MUSIC_URL} type="audio/mpeg" />
       </audio>
 
-      {/* ПРЕДЛОЖЕНИЕ ВКЛЮЧИТЬ МУЗЫКУ */}
-      {showMusicPrompt && (
-        <div style={{
-          position: "fixed", inset: 0, zIndex: 300,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          background: "rgba(42,37,30,0.45)",
-          backdropFilter: "blur(6px)",
-          animation: "softAppear 0.6s ease forwards",
-        }}>
-          <div style={{
-            background: C.cream,
-            border: `1px solid ${C.border}`,
-            borderRadius: 4,
-            padding: "40px 36px",
-            textAlign: "center",
-            maxWidth: 320,
-            width: "90vw",
-            boxShadow: "0 20px 60px rgba(42,37,30,0.2)",
-          }}>
-            <p style={{ fontSize: 28, marginBottom: 12 }}>♪</p>
-            <p style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "clamp(18px,5vw,22px)",
-              color: C.text, lineHeight: 1.6, marginBottom: 8,
-            }}>
-              Включить музыку?
-            </p>
-            <p style={{
-              fontSize: 12, color: C.textMuted, letterSpacing: "0.05em",
-              marginBottom: 28, lineHeight: 1.7,
-            }}>
-              River Flows In You · Yiruma
-            </p>
-            <div style={{ display: "flex", gap: 10 }}>
-              <button onClick={acceptMusic} style={{
-                flex: 1, padding: "11px 0",
-                background: C.sage, border: "none", borderRadius: 2,
-                color: "#fff", fontSize: 12, letterSpacing: "0.15em",
-                textTransform: "uppercase", cursor: "pointer",
-                fontFamily: "'Montserrat', sans-serif",
-                transition: "opacity 0.2s",
-              }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
-                onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
-              >
-                Да, включить
-              </button>
-              <button onClick={declineMusic} style={{
-                flex: 1, padding: "11px 0",
-                background: "transparent", border: `1px solid ${C.sagePale}`, borderRadius: 2,
-                color: C.textMuted, fontSize: 12, letterSpacing: "0.15em",
-                textTransform: "uppercase", cursor: "pointer",
-                fontFamily: "'Montserrat', sans-serif",
-                transition: "opacity 0.2s",
-              }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = "0.7")}
-                onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
-              >
-                Без музыки
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* НЕНАВЯЗЧИВЫЙ БАННЕР СВЕРХУ */}
+      <div style={{
+        position: "fixed", top: 0, left: 0, right: 0,
+        zIndex: 300,
+        transform: showBanner ? "translateY(0)" : "translateY(-100%)",
+        transition: "transform 0.6s cubic-bezier(0.4,0,0.2,1)",
+        background: "rgba(250,246,239,0.97)",
+        borderBottom: `1px solid ${C.border}`,
+        backdropFilter: "blur(8px)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        gap: 16, padding: "10px 20px",
+      }}>
+        <span style={{ fontSize: 14, color: C.textMuted, letterSpacing: "0.04em" }}>
+          ♪ <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 15, color: C.text }}>River Flows In You</span> · Yiruma
+        </span>
+        <button onClick={acceptMusic} style={{
+          padding: "5px 16px",
+          background: C.sage, border: "none", borderRadius: 20,
+          color: "#fff", fontSize: 11, letterSpacing: "0.12em",
+          textTransform: "uppercase", cursor: "pointer",
+          fontFamily: "'Montserrat', sans-serif",
+          transition: "opacity 0.2s", whiteSpace: "nowrap",
+        }}
+          onMouseEnter={e => (e.currentTarget.style.opacity = "0.82")}
+          onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+        >
+          Включить
+        </button>
+        <button onClick={() => setShowBanner(false)} style={{
+          background: "none", border: "none", cursor: "pointer",
+          color: C.textMuted, fontSize: 16, lineHeight: 1, padding: "2px 4px",
+          opacity: 0.5,
+        }}>✕</button>
+      </div>
 
       {/* КНОПКА МУЗЫКИ — правый верхний угол */}
       <button
