@@ -54,9 +54,19 @@ function Snowfall() {
 export default function WeddingBottom() {
   const [formData, setFormData] = useState({ name: "", attending: "", wish: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSending(true);
+    try {
+      await fetch("https://functions.poehali.dev/a67cf0a8-f7d1-4dc8-af3f-b45b3eed5ba7", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+    } catch (err) { console.error(err); }
+    setSending(false);
     setSubmitted(true);
   };
 
@@ -214,11 +224,9 @@ export default function WeddingBottom() {
               </div>
               <textarea placeholder="Тёплое пожелание (необязательно)" value={formData.wish} onChange={e => setFormData({ ...formData, wish: e.target.value })} rows={3}
                 style={{ background: C.cream, border: `1px solid ${C.border}`, borderRadius: 2, padding: "13px 16px", color: C.text, fontSize: 14, fontFamily: "'Montserrat',sans-serif", outline: "none", resize: "none", width: "100%" }} />
-              <button type="submit"
-                style={{ padding: "14px", background: C.sage, border: "none", borderRadius: 2, color: "#fff", fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", cursor: "pointer", fontFamily: "'Montserrat',sans-serif", transition: "opacity 0.25s" }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = "0.82")}
-                onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
-                Отправить ответ
+              <button type="submit" disabled={sending}
+                style={{ padding: "14px", background: C.sage, border: "none", borderRadius: 2, color: "#fff", fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", cursor: sending ? "default" : "pointer", fontFamily: "'Montserrat',sans-serif", transition: "opacity 0.25s", opacity: sending ? 0.6 : 1 }}>
+                {sending ? "Отправляем…" : "Отправить ответ"}
               </button>
             </form>
           )}
