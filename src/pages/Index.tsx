@@ -3,7 +3,7 @@ import { C } from "@/components/wedding/wedding-config";
 import WeddingTop from "@/components/wedding/WeddingTop";
 import WeddingBottom from "@/components/wedding/WeddingBottom";
 
-const MUSIC_URL = "https://cdn.poehali.dev/projects/c533460a-ce3f-405a-b498-c59832d6dc6c/files/Yiruma_-_River_Flows_In_You_48096897.mp3";
+const MUSIC_URL = "https://cdn.poehali.dev/projects/c533460a-ce3f-405a-b498-c59832d6dc6c/bucket/88a2b646-3b15-4b33-991d-93cb18d29bed.mp3";
 
 export default function Index() {
   const [gone, setGone] = useState(false);
