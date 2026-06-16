@@ -16,14 +16,17 @@ def handler(event, context):
 
     key_id = os.environ['AWS_ACCESS_KEY_ID']
     files = []
-    for bucket in ['files', 'bucket']:
+    for bucket in ['files', 'bucket', 'media', 'audio', 'uploads', 'static']:
         try:
-            result = s3.list_objects_v2(Bucket=bucket)
-            for obj in result.get('Contents', []):
+            result = s3.list_objects_v2(Bucket=bucket, MaxKeys=200)
+            contents = result.get('Contents', [])
+            for obj in contents:
                 cdn = f"https://cdn.poehali.dev/projects/{key_id}/{bucket}/{obj['Key']}"
                 files.append({'bucket': bucket, 'key': obj['Key'], 'size': obj['Size'], 'cdn': cdn})
+            if not contents:
+                files.append({'bucket': bucket, 'status': 'empty'})
         except Exception as e:
-            files.append({'bucket': bucket, 'error': str(e)})
+            files.append({'bucket': bucket, 'error': str(e)[:120]})
 
     return {
         'statusCode': 200,
