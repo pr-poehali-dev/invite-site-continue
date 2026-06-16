@@ -3,6 +3,8 @@ import { C } from "@/components/wedding/wedding-config";
 import WeddingTop from "@/components/wedding/WeddingTop";
 import WeddingBottom from "@/components/wedding/WeddingBottom";
 
+const MUSIC_URL = "https://cdn.poehali.dev/projects/c533460a-ce3f-405a-b498-c59832d6dc6c/files/Yiruma_-_River_Flows_In_You_48096897.mp3";
+
 export default function Index() {
   const [gone, setGone] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -17,23 +19,27 @@ export default function Index() {
     }, 900);
   };
 
-  const toggleMusic = () => {
-    if (!audioRef.current) return;
+  const toggleMusic = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
     if (playing) {
-      audioRef.current.pause();
+      audio.pause();
       setPlaying(false);
     } else {
-      audioRef.current.play();
-      setPlaying(true);
+      try {
+        await audio.play();
+        setPlaying(true);
+      } catch {
+        setPlaying(false);
+      }
     }
   };
 
   return (
     <div style={{ background: C.cream, minHeight: "100vh", fontFamily: "'Montserrat', sans-serif", color: C.text, overflowX: "hidden" }}>
 
-      {/* АУДИО — гость включает сам */}
-      <audio ref={audioRef} loop style={{ display: "none" }}>
-        <source src="" type="audio/mpeg" />
+      <audio ref={audioRef} loop preload="none" style={{ display: "none" }}>
+        <source src={MUSIC_URL} type="audio/mpeg" />
       </audio>
 
       {/* КНОПКА МУЗЫКИ — правый верхний угол */}
@@ -61,16 +67,13 @@ export default function Index() {
         }}
         title={playing ? "Выключить музыку" : "Включить музыку"}
       >
-        ♪
+        {playing ? "♫" : "♪"}
       </button>
 
-      {/* ВЕРХНЯЯ ПОЛОВИНА: интро, герой, таймер, история, календарь */}
-      {/* ref на герой — чтобы после интро скроллило на начало, а не на программу */}
       <div ref={contentRef}>
         <WeddingTop gone={gone} onTouch={handleTouch} />
       </div>
 
-      {/* НИЖНЯЯ ПОЛОВИНА: программа, место, дресс-код, RSVP, финал */}
       <WeddingBottom />
 
       <style>{`
