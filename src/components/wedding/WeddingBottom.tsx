@@ -103,20 +103,43 @@ export default function WeddingBottom() {
             Ждём вас по адресу:
           </p>
         </FadeIn>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px,1fr))", gap: 20, maxWidth: 700, margin: "0 auto 48px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px,1fr))", gap: 24, maxWidth: 780, margin: "0 auto 48px" }}>
           {[
-            { title: "Алтай той",       addr: "с. Новый Бельтир", street: "ул. Кара-Кем, дом 5",  time: "10:00", maps: "https://maps.google.com/?q=Новый+Бельтир" },
-            { title: "Банкет · «Туштажу»", addr: "с. Кош-Агач",   street: "ул. Каменистая, 27",    time: "16:00", maps: "https://maps.google.com/?q=Кош-Агач+Каменистая+27" },
+            {
+              title: "Алтай той",
+              addr: "с. Новый Бельтир", street: "ул. Кара-Кем, дом 5", time: "10:00",
+              ymaps: "https://yandex.ru/maps/?text=Новый+Бельтир,+ул.+Кара-Кем,+5&z=15",
+              embed: "https://yandex.ru/map-widget/v1/?text=Новый+Бельтир,+ул.+Кара-Кем,+5&z=14&l=map",
+            },
+            {
+              title: "Банкет · «Туштажу»",
+              addr: "с. Кош-Агач", street: "ул. Каменистая, 27", time: "16:00",
+              ymaps: "https://yandex.ru/maps/?text=Кош-Агач,+ул.+Каменистая,+27&z=15",
+              embed: "https://yandex.ru/map-widget/v1/?text=Кош-Агач,+ул.+Каменистая,+27&z=14&l=map",
+            },
           ].map((loc, i) => (
             <FadeIn key={i} delay={i * 0.15}>
-              <div style={{ border: `1px solid ${C.border}`, borderRadius: 2, padding: "28px 22px", background: C.cream, position: "relative" }}>
-                <div style={{ position: "absolute", top: 14, right: 14, fontSize: 11, letterSpacing: "0.15em", color: C.sage }}>{loc.time}</div>
-                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, color: C.text, marginBottom: 6 }}>{loc.title}</p>
-                <p style={{ fontSize: 13, color: C.sage, marginBottom: 3 }}>{loc.addr}</p>
-                <p style={{ fontSize: 13, color: C.textMuted, marginBottom: 18 }}>{loc.street}</p>
-                <a href={loc.maps} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", padding: "7px 18px", border: `1px solid ${C.sagePale}`, borderRadius: 2, fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", color: C.sage, textDecoration: "none" }}>
-                  Открыть карту
-                </a>
+              <div style={{ border: `1px solid ${C.border}`, borderRadius: 2, background: C.cream, overflow: "hidden", position: "relative" }}>
+                {/* Карта */}
+                <div style={{ width: "100%", height: 180, background: C.creamAlt }}>
+                  <iframe
+                    src={loc.embed}
+                    width="100%" height="180"
+                    style={{ border: "none", display: "block" }}
+                    allowFullScreen
+                    title={loc.title}
+                  />
+                </div>
+                {/* Инфо */}
+                <div style={{ padding: "20px 22px 22px", position: "relative" }}>
+                  <div style={{ position: "absolute", top: 16, right: 16, fontSize: 11, letterSpacing: "0.15em", color: C.sage }}>{loc.time}</div>
+                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, color: C.text, marginBottom: 4 }}>{loc.title}</p>
+                  <p style={{ fontSize: 12, color: C.sage, marginBottom: 2 }}>{loc.addr}</p>
+                  <p style={{ fontSize: 12, color: C.textMuted, marginBottom: 16 }}>{loc.street}</p>
+                  <a href={loc.ymaps} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", padding: "7px 18px", border: `1px solid ${C.sagePale}`, borderRadius: 2, fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", color: C.sage, textDecoration: "none" }}>
+                    Открыть в Яндекс Картах
+                  </a>
+                </div>
               </div>
             </FadeIn>
           ))}
