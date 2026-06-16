@@ -14,17 +14,19 @@ def handler(event, context):
         aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
     )
 
+    key_id = os.environ['AWS_ACCESS_KEY_ID']
     files = []
     for bucket in ['files', 'bucket']:
         try:
             result = s3.list_objects_v2(Bucket=bucket)
             for obj in result.get('Contents', []):
-                files.append({'bucket': bucket, 'key': obj['Key'], 'size': obj['Size']})
+                cdn = f"https://cdn.poehali.dev/projects/{key_id}/{bucket}/{obj['Key']}"
+                files.append({'bucket': bucket, 'key': obj['Key'], 'size': obj['Size'], 'cdn': cdn})
         except Exception as e:
             files.append({'bucket': bucket, 'error': str(e)})
 
     return {
         'statusCode': 200,
         'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-        'body': json.dumps({'files': files})
+        'body': json.dumps({'files': files, 'key_id': key_id})
     }
