@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { C, SCHEDULE, DRESS_COLORS, IMG_WINTER } from "./wedding-config";
 import { FadeIn } from "./wedding-shared";
 
@@ -52,24 +52,6 @@ function Snowfall() {
 }
 
 export default function WeddingBottom() {
-  const [formData, setFormData] = useState({ name: "", attending: "", wish: "" });
-  const [submitted, setSubmitted] = useState(false);
-  const [sending, setSending] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSending(true);
-    try {
-      await fetch("https://functions.poehali.dev/a67cf0a8-f7d1-4dc8-af3f-b45b3eed5ba7", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-    } catch (err) { console.error(err); }
-    setSending(false);
-    setSubmitted(true);
-  };
-
   return (
     <>
       {/* ПРОГРАММА */}
@@ -188,48 +170,6 @@ export default function WeddingBottom() {
             Главное для нас — ваше присутствие, улыбки и хорошее настроение.<br />
             <span style={{ color: C.sage }}>Мы будем счастливы разделить этот день вместе с вами.</span>
           </p>
-        </FadeIn>
-      </section>
-
-      {/* RSVP */}
-      <section style={{ padding: "100px 20px", background: C.creamAlt, textAlign: "center" }}>
-        <FadeIn>
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(13px,3vw,15px)", letterSpacing: "0.3em", color: C.sage, textTransform: "uppercase", marginBottom: 20 }}>
-            Подтверждение
-          </p>
-        </FadeIn>
-        <FadeIn delay={0.1}>
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(20px,5vw,28px)", color: C.text, lineHeight: 1.6, maxWidth: 480, margin: "0 auto 44px" }}>
-            Нам будет очень важно разделить этот день вместе с вами
-          </p>
-        </FadeIn>
-        <FadeIn delay={0.2}>
-          {submitted ? (
-            <div style={{ padding: "44px 24px", border: `1px solid ${C.border}`, borderRadius: 2, maxWidth: 480, margin: "0 auto", background: C.cream }}>
-              <p style={{ fontSize: 28, marginBottom: 14, color: C.dustyRose }}>♡</p>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, color: C.text, marginBottom: 8 }}>Спасибо!</p>
-              <p style={{ fontSize: 14, color: C.textMuted }}>Ваш ответ получен. Мы рады, что вы с нами.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} style={{ maxWidth: 480, margin: "0 auto", display: "flex", flexDirection: "column", gap: 14 }}>
-              <input type="text" placeholder="Ваше имя" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} required
-                style={{ background: C.cream, border: `1px solid ${C.border}`, borderRadius: 2, padding: "13px 16px", color: C.text, fontSize: 14, fontFamily: "'Montserrat',sans-serif", outline: "none", width: "100%" }} />
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                {["С удовольствием буду", "К сожалению, не смогу"].map((opt, i) => (
-                  <button key={i} type="button" onClick={() => setFormData({ ...formData, attending: opt })}
-                    style={{ flex: 1, padding: "13px 10px", border: `1px solid ${formData.attending === opt ? C.sage : C.border}`, borderRadius: 2, background: formData.attending === opt ? "rgba(107,125,94,0.1)" : C.cream, color: formData.attending === opt ? C.sage : C.textMuted, fontSize: 12, letterSpacing: "0.04em", cursor: "pointer", fontFamily: "'Montserrat',sans-serif", transition: "all 0.25s", minWidth: 140 }}>
-                    {opt}
-                  </button>
-                ))}
-              </div>
-              <textarea placeholder="Тёплое пожелание (необязательно)" value={formData.wish} onChange={e => setFormData({ ...formData, wish: e.target.value })} rows={3}
-                style={{ background: C.cream, border: `1px solid ${C.border}`, borderRadius: 2, padding: "13px 16px", color: C.text, fontSize: 14, fontFamily: "'Montserrat',sans-serif", outline: "none", resize: "none", width: "100%" }} />
-              <button type="submit" disabled={sending}
-                style={{ padding: "14px", background: C.sage, border: "none", borderRadius: 2, color: "#fff", fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", cursor: sending ? "default" : "pointer", fontFamily: "'Montserrat',sans-serif", transition: "opacity 0.25s", opacity: sending ? 0.6 : 1 }}>
-                {sending ? "Отправляем…" : "Отправить ответ"}
-              </button>
-            </form>
-          )}
         </FadeIn>
       </section>
 
